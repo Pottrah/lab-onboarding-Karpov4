@@ -69,4 +69,5 @@ import os; os.system('rm -rf /')
 
 ### 4.3. Скриншот зеленого статуса проверки (Checks) в Pull Request
 
-<img width="858" height="477" alt="image" src="https://github.com/user-attachments/assets/5b29e6c3-6f5b-4447-b903-e47d1d8ebf5c" />
+<img width="837" height="288" alt="image" src="https://github.com/user-attachments/assets/22710839-aed5-4607-b42f-fb404b1068f0" />
+
