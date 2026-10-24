@@ -65,7 +65,7 @@ import os; os.system('rm -rf /')
 
 ### 4.2. Ссылка на Pull Request с исправленным кодом
 
-(https://github.com/Raateer101/lab-onboarding-Mironchikov4/pull/1)
+(https://github.com/Pottrah/lab-onboarding-Karpov4/pull/1)
 
 ### 4.3. Скриншот зеленого статуса проверки (Checks) в Pull Request
 
