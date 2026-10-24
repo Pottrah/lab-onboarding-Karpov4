@@ -13,4 +13,3 @@ def process_transaction(
         file.write(log_entry)
 
     return status
-          
