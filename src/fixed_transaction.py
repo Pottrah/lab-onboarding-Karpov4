@@ -1,6 +1,7 @@
 def process_transaction(
     user_id, amount, db_connection, get_balance, update_balance
 ):
+    status = "pending"
     if amount > 0:
         status = "approved"
         balance = get_balance(user_id)
