@@ -1,76 +1,67 @@
 @echo off
-chcp 65001 > nul
+chcp 1251 > nul
 
 REM =========================================================
-REM Тема: Инструментальные средства ревьюирования
-REM Автор: [Твоя Фамилия]
-REM Дата: 30.10.2026
+REM Тема: Диагностика клиентского компьютера
+REM Автор: [Карпов]
 REM =========================================================
 
 set "REP=%~dp0pc_report.txt"
 
-echo Диагностика компьютера > "%REP%"
+echo COMPUTER DIAGNOSTICS > "%REP%"
 echo ==================================== >> "%REP%"
-echo Диагностика компьютера
+echo COMPUTER DIAGNOSTICS
 echo ====================================
 
 echo.
-echo [Операционная система]
+echo [OPERATING SYSTEM]
 echo. >> "%REP%"
-echo [Операционная система] >> "%REP%"
-wmic os get Caption,Version /format:list > "%~dp0os.txt"
-type "%~dp0os.txt"
-type "%~dp0os.txt" >> "%REP%"
-del "%~dp0os.txt"
+echo [OPERATING SYSTEM] >> "%REPORT_FILE%"
+wmic os get Caption,Version /format:list
+wmic os get Caption,Version /format:list >> "%REP%"
 
 echo.
-echo [Процессор]
+echo [PROCESSOR]
 echo. >> "%REP%"
-echo [Процессор] >> "%REP%"
-wmic cpu get Name /format:list > "%~dp0cpu.txt"
-type "%~dp0cpu.txt"
-type "%~dp0cpu.txt" >> "%REP%"
-del "%~dp0cpu.txt"
+echo [PROCESSOR] >> "%REP%"
+wmic cpu get Name /format:list
+wmic cpu get Name /format:list >> "%REP%"
 
 echo.
-echo [Оперативная память]
+echo [MEMORY]
 echo. >> "%REP%"
-echo [Оперативная память] >> "%REP%"
-for /f "tokens=2 delims==" %%i in ('wmic os get TotalVisibleMemorySize /format:list') do set "t_mem=%%i"
-for /f "tokens=2 delims==" %%i in ('wmic os get FreePhysicalMemory /format:list') do set "f_mem=%%i"
-set /a t_gb=%t_mem% / 1048576
-set /a f_gb=%f_mem% / 1048576
-echo Всего памяти: %t_gb% ГБ
-echo Всего памяти: %t_gb% ГБ >> "%REP%"
-echo Свободно памяти: %f_gb% ГБ
-echo Свободно памяти: %f_gb% ГБ >> "%REP%"
+echo [MEMORY] >> "%REP%"
+for /f "tokens=2 delims==" %%i in ('wmic os get TotalVisibleMemorySize /format:list') do set /a "t_gb=%%i / 1048576"
+for /f "tokens=2 delims==" %%i in ('wmic os get FreePhysicalMemory /format:list') do set /a "f_gb=%%i / 1048576"
+echo Total Memory: %t_gb% GB
+echo Total Memory: %t_gb% GB >> "%REP%"
+echo Free Memory: %f_gb% GB
+echo Free Memory: %f_gb% GB >> "%REP%"
 
 echo.
-echo [Диск C]
+echo [DISK C]
 echo. >> "%REP%"
-echo [Диск C] >> "%REP%"
-for /f "tokens=2 delims==" %%i in ('wmic logicaldisk where "DeviceID='C:'" get Size /format:list') do set "d_sz=%%i"
-for /f "tokens=2 delims==" %%i in ('wmic logicaldisk where "DeviceID='C:'" get FreeSpace /format:list') do set "d_fr=%%i"
-set /a sz_gb=%d_sz% / 1073741824
-set /a fr_gb=%d_fr% / 1073741824
-echo Общий размер диска C: %sz_gb% ГБ
-echo Общий размер диска C: %sz_gb% ГБ >> "%REP%"
-echo Свободно на диске C: %fr_gb% ГБ
-echo Свободно на диске C: %fr_gb% ГБ >> "%REP%"
+echo [DISK C] >> "%REP%"
+for /f "tokens=2 delims==" %%i in ('wmic logicaldisk where "DeviceID='C:'" get Size /format:list') do set /a "sz_gb=%%i / 1073741824"
+for /f "tokens=2 delims==" %%i in ('wmic logicaldisk where "DeviceID='C:'" get FreeSpace /format:list') do set /a "fr_gb=%%i / 1073741824"
+echo Total Disk C: %sz_gb% GB
+echo Total Disk C: %sz_gb% GB >> "%REP%"
+echo Free Disk C: %fr_gb% GB
+echo Free Disk C: %fr_gb% GB >> "%REP%"
 
 echo.
-echo [Установленные программы]
-echo Идёт сбор информации...
+echo [INSTALLED PROGRAMS]
+echo Searching apps... Please wait...
 echo. >> "%REP%"
-echo [Установленные программы] >> "%REP%"
-powershell -NoProfile -Command "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object -Property DisplayName | Where-Object {$_.DisplayName -ne $null} | ForEach-Object {$_.DisplayName}" > "%~dp0apps.txt"
-type "%~dp0apps.txt"
-type "%~dp0apps.txt" >> "%REP%"
-del "%~dp0apps.txt"
+echo [INSTALLED PROGRAMS] >> "%REP%"
+for /f "tokens=2,*" %%a in ('reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall /s /f DisplayName ^| findstr "DisplayName"') do (
+    echo %%b
+    echo %%b >> "%REP%"
+)
 
 echo.
 echo ====================================
-echo Отчёт успешно сохранён в файл pc_report.txt
+echo Report saved successfully to pc_report.txt
 echo ====================================
 
 pause
